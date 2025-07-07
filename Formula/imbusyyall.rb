@@ -6,7 +6,20 @@ class Imbusyyall < Formula
   license "MIT"
 
   def install
-    bin.install "imbusyyall.rb" => "imbusyyall"
+    # Install the main script
+    libexec.install "imbusyyall.rb"
+
+    # Install lib directory
+    libexec.install "lib"
+
+    # Install data directory
+    libexec.install "data"
+
+    # Create a wrapper script that sets up the proper paths
+    (bin/"imbusyyall").write <<~EOS
+      #!/bin/bash
+      cd "#{libexec}" && exec ruby "#{libexec}/imbusyyall.rb" "$@"
+    EOS
   end
 
   test do
